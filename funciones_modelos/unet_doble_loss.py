@@ -5,7 +5,7 @@ import funciones_modelos.unet_funct as un
 import funciones_imagenes.extra_functions as ex
 
 
-mask_model = keras.models.load_model('/home/mr1142/Documents/Data/models/mask_1.h5', 
+mask_model = keras.models.load_model('./modelos/mask_1.h5', 
                                     custom_objects={"dice_coef_loss": ex.dice_coef_loss, "dice_coef": ex.dice_coef})
 sub_mask = tf.keras.Model(inputs=mask_model.input, outputs=mask_model.layers[18].output)
 sub_mask.trainable = False

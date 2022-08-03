@@ -11,7 +11,7 @@ def quitar_trozos(mask):
     k = list(ntotal.keys())[np.argmax(list(ntotal.values()))]
     print(k)
     mask = k==mask
-    mask = ndimage.binary_fill_holes(mask)
+    mask = ndimage.binary_fill_holes(mask, structure=np.ones((5,5)))
     return mask
 
 

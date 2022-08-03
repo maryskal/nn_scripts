@@ -3,7 +3,6 @@ import re
 import argparse
 import cv2
 import tensorflow.keras as keras
-import numpy as np
 
 
 if __name__ == '__main__':
@@ -16,7 +15,7 @@ if __name__ == '__main__':
     parser.add_argument('-m',
                         '--modelo',
                         type=str,
-                        default='uloss_final_renacimiento_validation_8.h5',
+                        default='unet_final_renacimiento_validation_6.h5',
                         help="nombre del modelo (incluyendo extension)")
     parser.add_argument('-vp',
                         '--validation_path',
@@ -31,7 +30,6 @@ if __name__ == '__main__':
     path = args.validation_path
     import funciones_imagenes.mask_funct as msk
     import funciones_imagenes.extra_functions as ex
-    import funciones_imagenes.image_funct as im
     import funciones_modelos.unet_doble_loss as u_loss
 
     model = os.path.join('./modelos', modelo)

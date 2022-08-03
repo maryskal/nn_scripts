@@ -9,7 +9,7 @@ import funciones_modelos.evaluation as ev
 import pandas as pd
 import os
 
-os.environ['CUDA_VISIBLE_DEVICES'] = str(3)
+os.environ['CUDA_VISIBLE_DEVICES'] = str(2)
 
 
 path = '/home/mr1142/Documents/Data/models/validation_results'
@@ -25,7 +25,7 @@ for csv in csvs:
 
 path = '/home/mr1142/Documents/Data/models'
 names = ex.list_files(path)
-names = [name for name in names if bool(re.search('final', name))]
+names = [name for name in names if bool(re.search('fine_tuning', name))]
 metrics = [ex.dice_coef_loss, u_loss.loss_mask, 'accuracy', 'AUC',
                 tf.keras.metrics.FalsePositives(), tf.keras.metrics.FalseNegatives()]
 
@@ -43,7 +43,7 @@ for model in names:
         unet_model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate = 1e-4),
                             loss=u_loss.MyLoss,
                             metrics =metrics)
-        ev.all_evaluations('uloss', 'patologic_' + model[5:-3], unet_model)
+        ev.all_evaluations('uloss', 'fine_tuning_' + model[5:-3], unet_model)
     else:
         unet += 1
         path = os.path.join('/home/mr1142/Documents/Data/models', model)
@@ -54,7 +54,7 @@ for model in names:
         unet_model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=1e-4),
                         loss=ex.dice_coef_loss,
                         metrics=metrics)
-        ev.all_evaluations('unet', 'patologic_' + model[5:-3], unet_model)
+        ev.all_evaluations('unet', 'fine_tuning_' + model[5:-3], unet_model)
 
 
 

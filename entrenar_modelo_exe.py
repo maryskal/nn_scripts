@@ -2,7 +2,6 @@ import argparse
 import os
 import funciones_modelos.logs as logs
 import tensorflow as tf
-import logging_function as log
 import funciones_modelos.evaluation as ev
 
 
@@ -41,10 +40,10 @@ if __name__ == '__main__':
     pixels = 256
 
     #----------------------------------------------------
-    import gestion_imagenes.image_funct as im
+    import funciones_imagenes.image_funct as im
     import funciones_modelos.unet_doble_loss as u_loss
     import funciones_modelos.unet_funct as u_net
-    import gestion_imagenes.extra_functions as ex
+    import funciones_imagenes.extra_functions as ex
 
     metrics = [ex.dice_coef_loss, u_loss.loss_mask, 'accuracy', 'AUC',
                 tf.keras.metrics.FalsePositives(), tf.keras.metrics.FalseNegatives()]

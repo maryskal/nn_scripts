@@ -21,7 +21,7 @@ if __name__ == '__main__':
                         '--validation_path',
                         type=str,
                         default='/home/mr1142/Documents/Data/validacion_medica/NIH',
-                        help="path with the validation set") 
+                        help="path with the validation set")
 
     args = parser.parse_args()
 

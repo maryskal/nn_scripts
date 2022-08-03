@@ -18,14 +18,20 @@ if __name__ == '__main__':
     parser.add_argument('-f',
                         '--fine_tuning',
                         type=int,
-                        default=5,
-                        help="layers not trainable") 
+                        default=0,
+                        help="layers not trainable")
+    parser.add_argument('-n',
+                        '--name',
+                        type=str,
+                        default='',
+                        help="name to add to the model") 
 
     args = parser.parse_args()
 
     os.environ['CUDA_VISIBLE_DEVICES'] = str(args.device)
     modelo = args.model
     fine_tune_at = args.fine_tuning
+    name = args.name
     path = '/home/mr1142/Documents/Data/patologic'
     batch = 8
     epoch = 200
@@ -34,6 +40,7 @@ if __name__ == '__main__':
     import funciones_imagenes.image_funct as im
     import funciones_imagenes.extra_functions as ex
     import funciones_modelos.logs as logs
+    import funciones_modelos.evaluation as ev
 
     p = os.path.join('/home/mr1142/Documents/Data/models', modelo)
     model = keras.models.load_model(p, 
@@ -50,7 +57,7 @@ if __name__ == '__main__':
 
     type = re.split('_', modelo)[0]
     if type == 'unet':
-        model.compile(optimizer=keras.optimizers.Adam(learning_rate=1e-5),
+        model.compile(optimizer=keras.optimizers.Adam(learning_rate=1e-4),
                                 loss=ex.dice_coef_loss,
                                 metrics=metrics)
     else:
@@ -77,4 +84,5 @@ if __name__ == '__main__':
                             shuffle = True,
                             validation_split = 0.2) 
 
-    model.save('/home/mr1142/Documents/Data/models/' + modelo + '_' + 'fine_tuning' + '.h5')
+    model.save('/home/mr1142/Documents/Data/models/' + modelo + '_' + 'fine_tuning_' + name + '.h5')
+    ev.all_evaluations(type, modelo + '_' + 'fine_tuning_' + name, model)

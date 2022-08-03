@@ -9,7 +9,7 @@ import funciones_modelos.evaluation as ev
 import pandas as pd
 import os
 
-os.environ['CUDA_VISIBLE_DEVICES'] = str(2)
+os.environ['CUDA_VISIBLE_DEVICES'] = str(3)
 
 
 path = '/home/mr1142/Documents/Data/models/validation_results'
@@ -17,7 +17,7 @@ csvs = ex.list_files(path)
 
 for csv in csvs:
     df = pd.read_csv(os.path.join(path, csv))
-    index = [i for i in df.index if bool(re.search('', df['name'][i]))]
+    index = [i for i in df.index if bool(re.search('fine_tuning', df['name'][i]))]
     df = df.drop(index)
     df.to_csv(os.path.join(path, csv), index = False)
 

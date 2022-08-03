@@ -24,7 +24,8 @@ def recolor(img):
 
 
 def apply_mask(img, model):
-    pix = img.shape[1]
+    pix1 = img.shape[0]
+    pix2 = img.shape[1]
     # Paso la imagen a escala de grises
     img = recolor(img)
     # Creo una nueva imagen con las dimensiones de entrada al modelo
@@ -32,7 +33,7 @@ def apply_mask(img, model):
     # Genero la mascara
     mask = model.predict(img_2)[0,...]
     # Escalo la mascara generada al tamaño de la imagen de entrada
-    mask = cv2.resize(mask, (pix, pix))
+    mask = cv2.resize(mask, (pix2, pix1))
     # Limpio la mascara
     mask = quitar_trozos(mask > 0.5)
     return img*mask

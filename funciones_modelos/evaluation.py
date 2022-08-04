@@ -5,10 +5,9 @@ import pandas as pd
 import re
 import numpy as np
 
-masks_name = ex.list_files(os.path.join('/home/mr1142/Documents/Data/segmentation/splited/validation', 'mascara'))
 
-def evaluate(model, file_names=masks_name):
-    path = '/home/mr1142/Documents/Data/segmentation/splited/validation'
+def evaluate(model, path):
+    file_names = ex.list_files(os.path.join(path, 'mascara'))
     masks = im.create_tensor(path, 'mascara', file_names, im.binarize)
     images = im.create_tensor(path, 'images', file_names, im.normalize)
     results = model.evaluate(images, masks, batch_size=8)
@@ -24,8 +23,8 @@ def save_eval(type, name, results, group=''):
     df.to_csv(path, index = False)
 
 
-def all_evaluations(type, name, model):
-    save_eval(type, name, evaluate(model))
+def all_evaluations(type, name, model, path = '/home/mr1142/Documents/Data/segmentation/splited/validation'):
+    save_eval(type, name, evaluate(model, path))
     df = pd.read_csv('/home/mr1142/Documents/Data/segmentation/splited/validation/validation_data.csv')
     labels = [re.split('[|]', df['Finding Labels'][i]) for i in df.index]
     labels = [x for xs in labels for x in xs]

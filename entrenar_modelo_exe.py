@@ -15,7 +15,7 @@ if __name__ == '__main__':
     parser.add_argument('-c',
                         '--callbacks',
                         type=bool,
-                        default=False,
+                        default=True,
                         help="Callbacks")
     parser.add_argument('-n',
                         '--name',

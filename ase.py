@@ -17,7 +17,7 @@ csvs = ex.list_files(path)
 
 for csv in csvs:
     df = pd.read_csv(os.path.join(path, csv))
-    index = [i for i in df.index if bool(re.search('new_segmentation_1', df['name'][i]))]
+    index = [i for i in df.index if bool(re.search('fine_tuning', df['name'][i]))]
     df = df.drop(index)
     df.to_csv(os.path.join(path, csv), index = False)
 
@@ -25,7 +25,7 @@ for csv in csvs:
 
 path = '/home/mr1142/Documents/Data/models'
 names = ex.list_files(path)
-names = [name for name in names if bool(re.search('new_segmentation', name))]
+names = [name for name in names if bool(re.search('uloss_', name))]
 metrics = [ex.dice_coef_loss, u_loss.loss_mask, 'accuracy', 'AUC',
                 tf.keras.metrics.FalsePositives(), tf.keras.metrics.FalseNegatives()]
 
@@ -43,7 +43,7 @@ for model in names:
         unet_model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate = 1e-4),
                             loss=u_loss.MyLoss,
                             metrics =metrics)
-        ev.all_evaluations('uloss', 'patologic_' + model[5:-3], unet_model)
+        ev.all_evaluations('uloss', 'patologic_' + model[6:-3], unet_model, '/home/mr1142/Documents/Data/patologic')
     else:
         unet += 1
         path = os.path.join('/home/mr1142/Documents/Data/models', model)

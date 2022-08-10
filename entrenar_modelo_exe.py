@@ -99,7 +99,7 @@ if __name__ == '__main__':
                             shuffle = True,
                             validation_split = 0.2)        
 
-    unet_model.save('/home/mr1142/Documents/Data/models/' + model + '_' + name + '.h5')
+    unet_model.save('/home/mr1142/Documents/Data/models/mascaras/' + model + '_' + name + '.h5')
     
     # EVALUACIÓN
     ev.all_evaluations(model, name, unet_model)

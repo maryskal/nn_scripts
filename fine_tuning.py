@@ -42,7 +42,7 @@ if __name__ == '__main__':
     import funciones_modelos.logs as logs
     import funciones_modelos.evaluation as ev
 
-    p = os.path.join('/home/mr1142/Documents/Data/models', modelo)
+    p = os.path.join('/home/mr1142/Documents/Data/models/mascaras', modelo)
     model = keras.models.load_model(p, 
                                 custom_objects={"MyLoss": u_loss.MyLoss, 
                                                 "loss_mask": u_loss.loss_mask, 
@@ -84,5 +84,5 @@ if __name__ == '__main__':
                             shuffle = True,
                             validation_split = 0.2) 
 
-    model.save('/home/mr1142/Documents/Data/models/' + modelo + '_' + 'fine_tuning_' + name + '.h5')
+    model.save('/home/mr1142/Documents/Data/models/mascaras/' + modelo + '_' + 'fine_tuning_' + name + '.h5')
     ev.all_evaluations(type, modelo + '_' + 'fine_tuning_' + name, model)

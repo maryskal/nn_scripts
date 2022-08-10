@@ -12,7 +12,7 @@ import os
 os.environ['CUDA_VISIBLE_DEVICES'] = str(3)
 
 
-path = '/home/mr1142/Documents/Data/models/validation_results'
+path = '/home/mr1142/Documents/Data/models/mascaras/validation_results'
 csvs = ex.list_files(path)
 
 for csv in csvs:
@@ -23,7 +23,7 @@ for csv in csvs:
 
 
 
-path = '/home/mr1142/Documents/Data/models'
+path = '/home/mr1142/Documents/Data/models/mascaras'
 names = ex.list_files(path)
 names = [name for name in names if bool(re.search('uloss_', name))]
 metrics = [ex.dice_coef_loss, u_loss.loss_mask, 'accuracy', 'AUC',
@@ -34,7 +34,7 @@ unet = 0
 for model in names:
     if bool(re.search('uloss', model)):
         uloss += 1
-        path = os.path.join('/home/mr1142/Documents/Data/models', model)
+        path = os.path.join('/home/mr1142/Documents/Data/models/mascaras', model)
         unet_model = tf.keras.models.load_model(path, 
                                      custom_objects={"MyLoss": u_loss.MyLoss,
                                                     "loss_mask": u_loss.loss_mask, 
@@ -46,7 +46,7 @@ for model in names:
         ev.all_evaluations('uloss', 'patologic_' + model[6:-3], unet_model, '/home/mr1142/Documents/Data/patologic')
     else:
         unet += 1
-        path = os.path.join('/home/mr1142/Documents/Data/models', model)
+        path = os.path.join('/home/mr1142/Documents/Data/models/mascaras', model)
         unet_model = tf.keras.models.load_model(path, 
                                      custom_objects={"loss_mask": u_loss.loss_mask, 
                                                      "dice_coef_loss": ex.dice_coef_loss,

@@ -16,7 +16,7 @@ def evaluate(model, path):
 
 
 def save_eval(type, name, results, group=''):
-    path = '/home/mr1142/Documents/Data/models/validation_results/validation_results' + group + '.csv'
+    path = '/home/mr1142/Documents/Data/models/mascaras/validation_results/validation_results' + group + '.csv'
     df = pd.read_csv(path)
     save = [type, name] + results
     df.loc[len(df.index)] = save

@@ -51,9 +51,9 @@ def last_up_sampling(prev_layer):
     return x
 
 
-def build_unet():
+def build_unet(pixels):
      # inputs
-    inputs = layers.Input(shape=(256,256,3))
+    inputs = layers.Input(shape=(pixels,pixels,3))
     
     # adaptation = layers.Conv2D(3, 3, padding="same", activation = "elu")(inputs)
         
@@ -63,8 +63,7 @@ def build_unet():
                                  input_shape=(256,256,3),
                                  input_tensor=inputs)
     
-    efficienNet.trainable = False
-    
+   
     # ENCONDING
     # (128,128,144)
     dw1 = efficienNet.layers[31].output
@@ -104,17 +103,25 @@ def build_unet():
 
     # unet model with Keras Functional API
     unet_model = tf.keras.Model(inputs, outputs, name="U-Net")
+    
+    print('\ntrainable variables of unet model: {}'.format(len(unet_model.trainable_variables)))
 
     return unet_model
 
 
-def build_unet_model(fine_tune_at = 0):
+def build_unet_model(pixels, fine_tune = False, fine_tune_at = 326): 
     model = tf.keras.models.Sequential()
-    model.add(layers.Conv2D(3,3,padding="same", input_shape=(256,256,1), activation='elu', name = 'conv_inicial'))
-    unet_model = build_unet()
+    model.add(layers.Conv2D(3,3,padding="same", input_shape=(pixels,pixels,1), activation='elu', name = 'conv_inicial'))
+    unet_model = build_unet(pixels)
     model.add(unet_model)
 
-    for layer in unet_model.layers[:fine_tune_at]:
-        layer.trainable = False
+    unet_model.trainable = True
+    print('\ntrainable variables: {}'.format(len(model.trainable_variables)))
+
+    if fine_tune:
+        for layer in unet_model.layers[:fine_tune_at]:
+            layer.trainable = False
+    
+    print('trainable variables: {}'.format(len(model.trainable_variables)))
     
     return model

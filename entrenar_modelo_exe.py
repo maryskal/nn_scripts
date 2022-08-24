@@ -42,6 +42,7 @@ if __name__ == '__main__':
     #----------------------------------------------------
     import funciones_imagenes.image_funct as im
     import funciones_modelos.unet_doble_loss as u_loss
+    import funciones_modelos.eff_unet as u_eff
     import funciones_modelos.unet_funct as u_net
     import funciones_imagenes.extra_functions as ex
 
@@ -59,6 +60,13 @@ if __name__ == '__main__':
         unet_model = u_loss.build_unet_model(256)
         unet_model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate = 1e-4),
                             loss=u_loss.MyLoss,
+                            metrics =metrics)
+        return unet_model
+    
+    def ueff():
+        unet_model = u_eff.build_unet_model(256)
+        unet_model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate = 1e-4),
+                            loss=ex.dice_coef_loss,
                             metrics =metrics)
         return unet_model
     #----------------------------------------------------
@@ -88,6 +96,8 @@ if __name__ == '__main__':
         unet_model = unet()
     elif model == 'uloss':
         unet_model = uloss()
+    elif model == 'ueff':
+        unet_model = ueff()
     else:
         unet_model = None
         print('\n INCORRECT MODEL \n')
@@ -103,3 +113,4 @@ if __name__ == '__main__':
     
     # EVALUACIÓN
     ev.all_evaluations(model, name, unet_model)
+    ev.all_evaluations(model, 'patologic_' + name, unet_model, '/home/mr1142/Documents/Data/patologic')

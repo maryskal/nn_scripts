@@ -34,7 +34,7 @@ if __name__ == '__main__':
     callbacks = args.callbacks
     name = args.name
     model = args.model
-    path = '/home/mr1142/Documents/Data/segmentation'
+    path = '/home/mr1142/Documents/Data/old_segmentation/splited/train'
     batch = 8
     epoch = 200
     pixels = 256

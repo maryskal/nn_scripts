@@ -23,7 +23,7 @@ def save_eval(type, name, results, group=''):
     df.to_csv(path, index = False)
 
 
-def all_evaluations(type, name, model, path = '/home/mr1142/Documents/Data/segmentation/splited/validation'):
+def all_evaluations(type, name, model, path = '/home/mr1142/Documents/Data/old_segmentation/splited/validation'):
     save_eval(type, name, evaluate(model, path))
     df = pd.read_csv('/home/mr1142/Documents/Data/segmentation/splited/validation/validation_data.csv')
     labels = [re.split('[|]', df['Finding Labels'][i]) for i in df.index]

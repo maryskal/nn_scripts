@@ -1,3 +1,8 @@
+
+import pandas as pd
+import os
+
+os.environ['CUDA_VISIBLE_DEVICES'] = str(0)
 import funciones_imagenes.extra_functions as ex
 import re
 import tensorflow as tf
@@ -6,12 +11,7 @@ import funciones_modelos.unet_funct as u_net
 import funciones_modelos.evaluation as ev
 
 
-import pandas as pd
-import os
-
-os.environ['CUDA_VISIBLE_DEVICES'] = str(3)
-
-
+# BORRAR RESULTADOS DEL CSV
 path = '/home/mr1142/Documents/Data/models/mascaras/validation_results'
 csvs = ex.list_files(path)
 
@@ -23,17 +23,31 @@ for csv in csvs:
 
 
 
+# EVALUAR MÚLTIPLES MODELOS
 path = '/home/mr1142/Documents/Data/models/mascaras'
 names = ex.list_files(path)
 names = [name for name in names if bool(re.search('uloss_', name))]
 metrics = [ex.dice_coef_loss, u_loss.loss_mask, 'accuracy', 'AUC',
                 tf.keras.metrics.FalsePositives(), tf.keras.metrics.FalseNegatives()]
 
-uloss = 0
-unet = 0
+
+
+# EVALUAR UN MODELO
+model = 'uloss_final_renacimiento_validation_6.h5'
+metrics = [ex.dice_coef_loss, u_loss.loss_mask, 'accuracy', 'AUC',
+                tf.keras.metrics.FalsePositives(), tf.keras.metrics.FalseNegatives()]
+
+path = os.path.join('/home/mr1142/Documents/Data/models/mascaras', model)
+
+unet_model = tf.keras.models.load_model(path, 
+                custom_objects={"MyLoss": u_loss.MyLoss,
+                            "loss_mask": u_loss.loss_mask, 
+                            "dice_coef_loss": ex.dice_coef_loss,
+                            "dice_coef": ex.dice_coef}) 
+
+
 for model in names:
     if bool(re.search('uloss', model)):
-        uloss += 1
         path = os.path.join('/home/mr1142/Documents/Data/models/mascaras', model)
         unet_model = tf.keras.models.load_model(path, 
                                      custom_objects={"MyLoss": u_loss.MyLoss,
@@ -45,10 +59,10 @@ for model in names:
                             metrics =metrics)
         ev.all_evaluations('uloss', 'patologic_' + model[6:-3], unet_model, '/home/mr1142/Documents/Data/patologic')
     else:
-        unet += 1
         path = os.path.join('/home/mr1142/Documents/Data/models/mascaras', model)
         unet_model = tf.keras.models.load_model(path, 
-                                     custom_objects={"loss_mask": u_loss.loss_mask, 
+                                     custom_objects={"MyLoss": u_loss.MyLoss,
+                                                    "loss_mask": u_loss.loss_mask, 
                                                      "dice_coef_loss": ex.dice_coef_loss,
                                                      "dice_coef": ex.dice_coef})
         unet_model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=1e-4),
@@ -58,6 +72,10 @@ for model in names:
 
 
 # '/home/mr1142/Documents/Data/patologic'
+
+tf.keras.utils.plot_model(unet_model, to_file='images/ueff.png', show_layer_names = False, dpi=500)
+tf.keras.utils.model_to_dot(unet_model, to_file='images/unet.png')
+
 
 import numpy as np
 path = '/home/mr1142/Documents/Data/models/validation_results/validation_results' + '.csv'
@@ -92,3 +110,8 @@ images.min()
 
 # Aumento
 images, masks = im.augment_tensor(images,masks,'new',2)
+
+
+ima = os.path.join(path, 'images')
+
+a = '/home/mr1142/Documents/Data/segmentation/images'

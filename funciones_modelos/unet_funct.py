@@ -1,7 +1,6 @@
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
-import tensorflow_datasets as tfds
 
 def double_conv_block(x, n_filters):
     # Conv2D then eLU activation
